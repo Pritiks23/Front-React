@@ -2,23 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MyStore</title>
+  <title>Volt Wireless</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- I’m using Tailwind CDN so I don’t need a build step -->
+  <!-- I’m using Tailwind CDN so I don’t need a build process -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- React and ReactDOM from CDN (so no install needed) -->
+  <!-- React from CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-  <!-- Babel lets me write JSX directly in this file -->
+  <!-- Babel lets me write JSX directly here -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 
-<body class="bg-gray-50">
-
-  <!-- This is the root div where my entire React app will mount -->
+<body class="bg-black text-white">
   <div id="root"></div>
 
   <script type="text/babel">
@@ -26,125 +24,180 @@
     const { useState } = React;
 
     // ===============================
-    // Navbar Component
-    // I made this reusable so I could scale later if I split into multiple pages.
+    // NAVBAR
+    // I made this bold and minimal so it feels like a real telecom brand.
     // ===============================
     function Navbar({ setPage }) {
       return (
-        <nav className="bg-black text-white p-4 flex justify-between">
-          <h1 className="text-xl font-bold">MyStore</h1>
-          <div className="space-x-6">
-            <button onClick={() => setPage("home")}>Home</button>
-            <button onClick={() => setPage("products")}>Products</button>
-            <button onClick={() => setPage("subscribe")}>Subscription</button>
+        <nav className="flex justify-between items-center px-8 py-6 bg-black">
+          <h1 className="text-2xl font-bold tracking-widest text-purple-500">
+            VOLT
+          </h1>
+          <div className="space-x-8 text-lg">
+            <button onClick={() => setPage("home")} className="hover:text-purple-400">Home</button>
+            <button onClick={() => setPage("plans")} className="hover:text-purple-400">Plans</button>
+            <button onClick={() => setPage("about")} className="hover:text-purple-400">Why Volt</button>
           </div>
         </nav>
       );
     }
 
     // ===============================
-    // Product Card Component
-    // I separated this out so I don’t repeat layout code for each product.
+    // HERO SECTION
+    // This is the first thing users see so I made it dramatic with gradient text.
     // ===============================
-    function ProductCard({ name, price, description }) {
+    function Hero({ setPage }) {
       return (
-        <div className="border rounded-lg p-6 shadow-md bg-white hover:shadow-xl transition">
-          <h2 className="text-xl font-semibold">{name}</h2>
-          <p className="text-gray-600 my-2">{description}</p>
-          <p className="text-lg font-bold">{price}</p>
-          <button className="bg-black text-white px-4 py-2 mt-4 rounded">
-            Buy Now
+        <section className="text-center py-28 px-6 bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600">
+          <h2 className="text-5xl md:text-6xl font-extrabold mb-6">
+            Unlimited. Unlocked. Unmatched.
+          </h2>
+          <p className="text-xl mb-10 opacity-90">
+            5G wireless plans built for speed, freedom, and zero contracts.
+          </p>
+          <button
+            onClick={() => setPage("plans")}
+            className="bg-white text-black px-8 py-4 rounded-full text-lg font-semibold hover:scale-105 transition"
+          >
+            View Plans
           </button>
-        </div>
+        </section>
       );
     }
 
     // ===============================
-    // Subscription Component
-    // I’m using Stripe hosted checkout so I don’t need a backend.
-    // Replace the link with your real Stripe subscription link.
+    // PLAN CARD
+    // I made this reusable so I can easily add more plans later.
     // ===============================
-    function Subscription() {
+    function PlanCard({ name, price, features, highlight }) {
+
       const stripeLink = "https://buy.stripe.com/test_subscription_link_here";
 
       return (
-        <div className="bg-white p-10 rounded-lg shadow-lg text-center max-w-md mx-auto">
-          <h2 className="text-2xl font-bold">Premium Plan</h2>
-          <p className="my-4 text-gray-600">
-            Access exclusive content and member-only discounts.
-          </p>
-          <p className="text-xl font-semibold">$19/month</p>
+        <div className={`rounded-2xl p-8 shadow-xl transition transform hover:scale-105 
+          ${highlight ? "bg-gradient-to-br from-purple-600 to-indigo-600" : "bg-gray-900"}
+        `}>
+          <h3 className="text-2xl font-bold mb-4">{name}</h3>
+          <p className="text-4xl font-extrabold mb-6">{price}<span className="text-lg">/mo</span></p>
+
+          <ul className="space-y-2 mb-8">
+            {features.map((feature, index) => (
+              <li key={index}>✔ {feature}</li>
+            ))}
+          </ul>
+
           <a
             href={stripeLink}
             target="_blank"
-            className="bg-black text-white px-6 py-3 mt-6 inline-block rounded"
+            className="block text-center bg-white text-black py-3 rounded-lg font-semibold hover:bg-gray-200"
           >
-            Subscribe
+            Get Started
           </a>
         </div>
       );
     }
 
     // ===============================
-    // Main App Component
-    // I’m handling simple navigation using state instead of routing.
-    // This keeps everything inside one file and still component-based.
+    // WHY VOLT SECTION
+    // I added this to build trust and feel like a real telecom brand.
+    // ===============================
+    function WhyVolt() {
+      return (
+        <section className="py-20 px-10 bg-black text-center">
+          <h2 className="text-4xl font-bold mb-12 text-purple-500">Why Choose Volt?</h2>
+
+          <div className="grid md:grid-cols-3 gap-10 text-lg">
+            <div>
+              <h3 className="font-bold mb-3">⚡ Nationwide 5G</h3>
+              <p>Blazing-fast speeds powered by premium carrier infrastructure.</p>
+            </div>
+            <div>
+              <h3 className="font-bold mb-3">🔒 No Contracts</h3>
+              <p>Stay because you love us — not because you're locked in.</p>
+            </div>
+            <div>
+              <h3 className="font-bold mb-3">💬 24/7 Support</h3>
+              <p>Real humans. Real help. Anytime you need it.</p>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // ===============================
+    // MAIN APP
+    // I’m controlling navigation with state so everything stays in one file.
     // ===============================
     function App() {
       const [page, setPage] = useState("home");
 
-      const products = [
+      const plans = [
         {
-          name: "Product One",
-          price: "$49",
-          description: "High-quality premium product."
+          name: "Starter",
+          price: "$35",
+          features: [
+            "Unlimited Talk & Text",
+            "10GB High-Speed Data",
+            "Nationwide 5G Access"
+          ]
         },
         {
-          name: "Product Two",
-          price: "$89",
-          description: "Top-tier professional item."
+          name: "Unlimited Pro",
+          price: "$65",
+          highlight: true,
+          features: [
+            "Unlimited Premium Data",
+            "5G Ultra Wideband",
+            "Mobile Hotspot Included",
+            "International Texting"
+          ]
+        },
+        {
+          name: "Family Plan",
+          price: "$120",
+          features: [
+            "4 Lines Included",
+            "Unlimited Premium Data",
+            "Free SIM Cards",
+            "Priority Support"
+          ]
         }
       ];
 
       return (
         <div>
+
           <Navbar setPage={setPage} />
 
-          <main className="p-10">
+          {page === "home" && <Hero setPage={setPage} />}
 
-            {page === "home" && (
-              <div className="text-center py-20">
-                <h1 className="text-4xl font-bold">Welcome to MyStore</h1>
-                <p className="mt-4 text-gray-600">
-                  Premium ecommerce experience built with React.
-                </p>
-              </div>
-            )}
+          {page === "plans" && (
+            <section className="py-20 px-10 bg-black">
+              <h2 className="text-4xl font-bold text-center mb-16 text-purple-500">
+                Choose Your Plan
+              </h2>
 
-            {page === "products" && (
-              <div className="grid md:grid-cols-2 gap-8">
-                {products.map((product, index) => (
-                  <ProductCard key={index} {...product} />
+              <div className="grid md:grid-cols-3 gap-10">
+                {plans.map((plan, index) => (
+                  <PlanCard key={index} {...plan} />
                 ))}
               </div>
-            )}
+            </section>
+          )}
 
-            {page === "subscribe" && (
-              <Subscription />
-            )}
+          {page === "about" && <WhyVolt />}
 
-          </main>
-
-          <footer className="bg-black text-white text-center p-4">
-            © 2026 MyStore. All rights reserved.
+          <footer className="text-center py-6 bg-gray-900 text-gray-400">
+            © 2026 Volt Wireless. All Rights Reserved.
           </footer>
+
         </div>
       );
     }
 
-    // Render my React app into the root div
     ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 
   </script>
 </body>
 </html>
+
